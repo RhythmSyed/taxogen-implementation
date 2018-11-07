@@ -1,4 +1,4 @@
-# taxogen-implementation
+# Taxogen implementation
 This is a implementation repo.
 
 # About
@@ -7,9 +7,8 @@ This repo is fork from the franticnerd, author of the paper for constructing top
 
 I make some editing over the original code, such as changing the implementation environment to python 3.6(the original author use the python 2 to implement) and enriching some py files' code comments because of the large number of similar variable names.
 
-The following readme is from the repo of original author.
 
-# About
+# Paper
 
 This repo is an implementation of the following paper for constructing topic taxonomy from text corpora.
 
