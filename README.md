@@ -45,3 +45,68 @@ You can use "python main.py" to run TaxoGen.
 
 A full pipeline is included in run.sh, including how we preprocess the corpus, run TaxoGen, and postproces the results for visualization.
 
+# Structure
+
+```
+├─ code
+│  ├─ embedding_deprecated
+│  │  ├─ fetch_papers_relevant.py
+│  │  ├─ leef.c
+│  │  ├─ makefile
+│  │  ├─ metrics.py
+│  │  ├─ query_search
+│  │  ├─ query_search.c
+│  │  ├─ ransampl.c
+│  │  ├─ ransampl.h
+│  │  ├─ run_leef.sh
+│  │  └─ word2vec.c
+│  ├─ postprocess
+│  │  ├─ __init__.py
+│  │  ├─ plot.py
+│  │  ├─ redundancy.py
+│  │  └─ visualize.py
+│  ├─ preprocess
+│  │  ├─ AutoPhraseOutput.py
+│  │  ├─ SegPhraseOutput.py
+│  │  ├─ __init__.py
+│  │  ├─ config.py
+│  │  └─ main.py
+│  ├─ tm
+│  │  ├─ bin
+│  │  │  └─ Taxonomy_TM.class
+│  │  ├─ src
+│  │  │  └─ Taxonomy_TM.java
+│  │  ├─ .classpath
+│  │  └─ .project
+│  ├─ bdi.py
+│  ├─ case_ranker.py
+│  ├─ caseslim.py
+│  ├─ cluster-preprocess.py
+│  ├─ cluster.py
+│  ├─ compress.py
+│  ├─ dataset.py
+│  ├─ eval.py
+│  ├─ gen_eval.py
+│  ├─ labeling.py
+│  ├─ local_embedding_training.py
+│  ├─ main.py
+│  ├─ paras.py
+│  ├─ preprocess.py
+│  ├─ run.sh
+│  ├─ sim_emb.py
+│  ├─ taxonomy.py
+│  ├─ utils.py
+│  ├─ word2vec.c
+│  ├─ word2vec.exe
+│  └─ word2vec.o
+├─ my code
+│  └─ understandData.py
+├─ windows
+│  └─ pthreads-w32-2-9-1-release
+├─ .gitignore
+├─ LICENSE
+├─ README.md
+└─ requirements.txt
+
+```
+
