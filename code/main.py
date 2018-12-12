@@ -4,6 +4,7 @@ __description__: Main function for TaxonGen
 __latest_updates__: 09/26/2017
 """
 
+import gc
 import time
 from dataset import DataSet
 from cluster import run_clustering
@@ -84,12 +85,14 @@ def recur(input_dir, node_dir, n_cluster, parent, n_cluster_iter, filter_thre,
 
             children = run_clustering(full_data, df.doc_id_file, df.seed_keyword_file, n_cluster, node_dir, parent,
                                       df.cluster_keyword_file, df.hierarchy_file, df.doc_membership_file)
-
             start = time.time()
             main_caseolap(df.link_file, df.doc_membership_file, df.cluster_keyword_file, df.caseolap_keyword_file)
             main_rank_phrase(df.caseolap_keyword_file, df.filtered_keyword_file, filter_thre)
             end = time.time()
             print("[Main] Finish running CaseOALP using %s (seconds)" % (end - start))
+            
+    del full_data
+    gc.collect()
 
     # prepare the embedding for child level
     if level < MAX_LEVEL:
@@ -121,7 +124,7 @@ def main(opt):
 
     # our method
     print(opt['data_dir'])
-    root_dir = opt['data_dir'] + 'our-l3-0.15/'
+    root_dir = opt['data_dir'] + 'our-l3-0.25/'
     print(init_dir)
     print(root_dir)
     copy_tree(init_dir, root_dir)

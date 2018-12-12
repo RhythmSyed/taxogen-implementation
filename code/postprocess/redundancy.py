@@ -54,7 +54,7 @@ def main(idx_file, taxonomy_dir, output_file):
     inverted_index = load_inverted_index(idx_file)
     # print len(inverted_index)
     taxonomy_files = get_tax_filenames(taxonomy_dir)
-    print taxonomy_files
+    print(taxonomy_files)
     with open(output_file, 'a') as fout:
         for tax_file in taxonomy_files:
             tax = load_taxonomy(tax_file)
@@ -66,9 +66,9 @@ def main(idx_file, taxonomy_dir, output_file):
 # tax_dir = '/shared/data/czhang82/projects/local-embedding/dblp/taxonomies/'
 # eval_dir = '/shared/data/czhang82/projects/local-embedding/dblp/results/'
 
-idx_file = '/Users/chao/data/projects/local-embedding/dblp/input/index.txt'
-tax_dir = '/Users/chao/data/projects/local-embedding/dblp/taxonomies/'
-eval_dir = '/Users/chao/data/projects/local-embedding/dblp/results/'
+idx_file = '../../data/dblp/input/index.txt'
+tax_dir = '../../data/dblp/taxonomies/'
+eval_dir = '../../data/dblp/results/'
 
 output_file = eval_dir + 'jaccard.txt'
 main(idx_file, tax_dir, output_file)

@@ -128,7 +128,8 @@ def run_word2vec(pd_map, docs, cates, folder):
         print(output_f)
         # embed_proc = subprocess.Popen(["./word2vec", "-threads", "20", "-train", input_f, "-output", output_f], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # embed_proc.wait()
-        subprocess.call(["./word2vec", "-threads", "20", "-train", input_f, "-output", output_f])
+        para = "word2vec.exe " + "-threads" + " " + "1" + " " + "-train" + " " + input_f + " " + "-output" + " " + output_f
+        os.system(para)
         print('[Local-embedding] done training word2vec')
 
 

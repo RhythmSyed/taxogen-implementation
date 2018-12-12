@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include <math.h>
 #include <pthread.h>
 
@@ -23,6 +24,47 @@
 #define MAX_EXP 6
 #define MAX_SENTENCE_LENGTH 1000
 #define MAX_CODE_LENGTH 40
+
+#ifdef _WIN32
+void* aligned_malloc(size_t size, size_t align)  
+{  
+    void* raw_malloc_ptr;       //初始分配的地址  
+    void* aligned_ptr;          //最终我们获得的alignment地址  
+      
+    if( align & (align - 1) )   //如果alignment不是2的n次方，返回  
+    {  
+        errno = EINVAL;  
+        return ( (void*)0 );  
+    }  
+      
+    if( 0 == size )  
+    {  
+        return ( (void*)0 );  
+    }   
+      
+    //将alignment置为至少为2*sizeof(void*),一种优化做法。  
+    if( align < 2*sizeof(void*) )  
+    {  
+        align = 2 * sizeof(void*);  
+    }  
+      
+    raw_malloc_ptr = malloc(size + align);  
+    if( !raw_malloc_ptr )  
+    {  
+        return ( (void*)0 );  
+    }  
+      
+    //Align  We have at least sizeof (void *) space below malloc'd ptr.   
+    aligned_ptr = (void*) ( ((size_t)raw_malloc_ptr + align) & ~((size_t)align - 1));  
+      
+    ( (void**)aligned_ptr )[-1] = raw_malloc_ptr;  
+      
+    return aligned_ptr;  
+}  
+
+#endif
+
+#define posix_memalign(p, a, s) (((*(p)) = aligned_malloc((s), (a))), *(p) ?0 :errno)
 
 const int vocab_hash_size = 30000000;  // Maximum 30 * 0.7 = 21M words in the vocabulary
 
@@ -336,18 +378,20 @@ void ReadVocab() {
 }
 
 void InitNet() {
+  
   long long a, b;
   unsigned long long next_random = 1;
-  a = __mingw_aligned_malloc ((void **)&syn0, 128, (long long)vocab_size * layer1_size * sizeof(real));
+  
+  a = posix_memalign((void **)&syn0, 128, (long long)vocab_size * layer1_size * sizeof(real));
   if (syn0 == NULL) {printf("Memory allocation failed\n"); exit(1);}
   if (hs) {
-    a = __mingw_aligned_malloc ((void **)&syn1, 128, (long long)vocab_size * layer1_size * sizeof(real));
+    a = posix_memalign((void **)&syn1, 128, (long long)vocab_size * layer1_size * sizeof(real));
     if (syn1 == NULL) {printf("Memory allocation failed\n"); exit(1);}
     for (a = 0; a < vocab_size; a++) for (b = 0; b < layer1_size; b++)
      syn1[a * layer1_size + b] = 0;
   }
   if (negative>0) {
-    a = __mingw_aligned_malloc ((void **)&syn1neg, 128, (long long)vocab_size * layer1_size * sizeof(real));
+    a = posix_memalign((void **)&syn1neg, 128, (long long)vocab_size * layer1_size * sizeof(real));
     if (syn1neg == NULL) {printf("Memory allocation failed\n"); exit(1);}
     for (a = 0; a < vocab_size; a++) for (b = 0; b < layer1_size; b++)
      syn1neg[a * layer1_size + b] = 0;
@@ -549,8 +593,8 @@ void TrainModel() {
   starting_alpha = alpha;
   if (read_vocab_file[0] != 0) ReadVocab(); else LearnVocabFromTrainFile();
   if (save_vocab_file[0] != 0) SaveVocab();
-  if (output_file[0] == 0) return;
-  InitNet();
+  if (output_file[0] == 0) return;  
+  InitNet(); 
   if (negative > 0) InitUnigramTable();
   start = clock();
   //for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainModelThread, (void *)a);
@@ -566,6 +610,7 @@ void TrainModel() {
       fprintf(fo, "\n");
     }
   } else {
+  	//printf("classes != 0\n");
     // Run K-means on the word vectors
     int clcn = classes, iter = 10, closeid;
     int *centcn = (int *)malloc(classes * sizeof(int));
@@ -686,7 +731,7 @@ int main(int argc, char **argv) {
   if ((i = ArgPos((char *)"-sample", argc, argv)) > 0) sample = atof(argv[i + 1]);
   if ((i = ArgPos((char *)"-hs", argc, argv)) > 0) hs = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-negative", argc, argv)) > 0) negative = atoi(argv[i + 1]);
-  if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) num_threads = atoi(argv[i + 1]);
+  if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) num_threads = 1;
   if ((i = ArgPos((char *)"-iter", argc, argv)) > 0) iter = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-min-count", argc, argv)) > 0) min_count = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-classes", argc, argv)) > 0) classes = atoi(argv[i + 1]);

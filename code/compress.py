@@ -1,7 +1,7 @@
 import argparse
 import utils
 import operator
-import Queue
+import queue
 import math
 from os import listdir
 from os.path import isfile, join, isdir, abspath, dirname, basename, exists
@@ -162,7 +162,7 @@ def get_rep(folder, c_id, N):
 
 
 def recursion(root, o_file, N):
-    q = Queue.Queue()
+    q = queue.Queue()
     q.put((root, -1, '*'))
 
     g = open(o_file, 'w+')
@@ -192,24 +192,35 @@ def recursion(root, o_file, N):
 
 
 if __name__ == "__main__":
-    # python compress.py -root ../data/dblp/our-l3-0.15 -output ../data/dblp/taxonomies/l3-our-0.15.txt
-    parser = argparse.ArgumentParser(prog='compress.py',
-                                     description='')
-    parser.add_argument('-root', required=True,
-                        help='root of data files.')
-    parser.add_argument('-output', required=True,
-                        help='output file name.')
-    parser.add_argument('-reidx', required=False,
-                        help='reindex_file.')
-    parser.add_argument('-N', required=False,
-                        help='number of phrases included.')
-    args = parser.parse_args()
-
+# =============================================================================
+#     # python compress.py -root ../data/dblp/our-l3-0.15 -output ../data/dblp/taxonomies/l3-our-0.15.txt
+#     parser = argparse.ArgumentParser(prog='compress.py',
+#                                      description='')
+#     parser.add_argument('-root', required=True,
+#                         help='root of data files.')
+#     parser.add_argument('-output', required=True,
+#                         help='output file name.')
+#     parser.add_argument('-reidx', required=False,
+#                         help='reindex_file.')
+#     parser.add_argument('-N', required=False,
+#                         help='number of phrases included.')
+#     args = parser.parse_args()
+# 
+#     N = 10
+#     if args.N is not None:
+#         N = int(args.N)
+# 
+#     if args.reidx is not None:
+#         parse_reidx(args.reidx)
+#         
+#     
+# 
+#     recursion(args.root, args.output, N)
+# =============================================================================
+    
     N = 10
-    if args.N is not None:
-        N = int(args.N)
-
-    if args.reidx is not None:
-        parse_reidx(args.reidx)
-
-    recursion(args.root, args.output, N)
+    root = "../data/dblp/our-l3-0.25"
+    output = "../data/dblp/taxonomies/our-l3-0.25.txt"
+    
+    
+    recursion(root, output, N)

@@ -17,7 +17,7 @@ level_1 = [1.751910, 1.751735, 1.740692, 1.74117]
 level_2 = [1.919940, 1.974107, 1.889726, 1.917602]
 level_3 = [2.021613, 1.93947, 2.043193, 1.911193]
 
-out_dir = '/Users/chao/data/projects/local-embedding/dblp/results/'
+out_dir = '../../data/dblp/results/'
 
 plt.figure()
 df = pd.DataFrame(overall)
